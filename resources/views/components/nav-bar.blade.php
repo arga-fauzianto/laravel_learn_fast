@@ -5,7 +5,7 @@
             <div class="flex items-center">
                 <div class="flex items-center gap-3 cursor-pointer" @click="sidebarOpen = !sidebarOpen">
                     <img src="{{ asset('images/logo.svg') }}" alt="Logo" class="w-8 h-8">
-                    <h1 class="text-lg font-medium font-poppins text-white">Management Daily</h1>
+                    <h1 class="text-lg font-medium font-poppins text-white">Management Task Manager</h1>
                 </div>
                 <div class="hidden md:block ml-10">
                     <div class="flex items-baseline space-x-4">
@@ -43,7 +43,7 @@
                          @keydown.escape.window="isOpen = false"
                          class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" 
                          role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                        <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Profile</a>
+                        <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Profile</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
