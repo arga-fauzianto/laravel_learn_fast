@@ -10,12 +10,12 @@ class Card extends Model
     use HasFactory;
 
     // Tentukan atribut yang dapat diisi
-    protected $fillable = ['title', 'description', 'list_id'];
+    protected $fillable = ['title', 'description', 'list_id']; // Updated to 'list_id'
 
     // Relasi dengan List
     public function list()
     {
-        return $this->belongsTo(ListCard::class, 'list_id');
+        return $this->belongsTo(ListCard::class, 'list_id'); // Updated to 'list_id'
     }
 
     // Relasi dengan Label

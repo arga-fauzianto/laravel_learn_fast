@@ -65,9 +65,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('boards/{board}/lists', [ListCardController::class, 'store'])->name('boards.lists.store');
 
 
-        Route::post('/update-card-position', [CardController::class, 'updatePosition'])->name('cards.updatePosition');
+    Route::post('/update-card-position', [CardController::class, 'updatePosition'])->name('cards.updatePosition');
 
     
+
+    Route::get('/boards/{board}', [BoardController::class, 'show'])->name('boards.show');
+    Route::get('/cards/{card}', [CardController::class, 'show'])->name('cards.show');
 
     // Checklist Routes
     Route::get('/cards/{card}/checklists/create', [ChecklistController::class, 'create'])->name('checklists.create');

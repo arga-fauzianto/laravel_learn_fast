@@ -3,17 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
-use App\Models\List;
-use App\Models\ListCard;
+use App\Models\ListCard; // Ensure this is the correct model for your lists
 use Illuminate\Http\Request;
 
 class CardController extends Controller
 {
-    public function store(Request $request, ListCard $list_card)
+    public function store(Request $request)
     {
-        $request->validate(['title' => 'required|string|max:255']);
-        $list_card->cards()->create($request->all());
-        return redirect()->route('boards.show', $list_card->board);
+        // Validate the incoming request
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'list_id' => 'required|exists:list_cards,id',  // Ensure this references the correct table
+        ]);
+
+        // Create a new card for the given list with the validated data
+        $listCard = ListCard::findOrFail($request->list_id); // Find the list using the list_id
+        $listCard->cards()->create([
+            'title' => $request->title,
+            'description' => $request->description,  // If description is provided
+            'list_id' => $request->list_id, // Include the list_id
+        ]);
+
+        // Redirect back to the board view
+        return redirect()->route('boards.show', $listCard->board);
     }
 
     /**
@@ -24,38 +36,41 @@ class CardController extends Controller
      */
     public function destroy(Card $card)
     {
+        // Delete the card
         $card->delete();
+
+        // Redirect back to the board view
         return redirect()->route('boards.show', $card->list->board);
     }
 
     public function update(Request $request, Card $card)
     {
-        $card->update($request->all());
+        // Validate the incoming request
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'list_id' => 'required|exists:list_cards,id',  // Ensure this references the correct table
+        ]);
+
+        // Update the card with the new data
+        $card->update([
+            'title' => $request->title,
+            'list_id' => $request->list_id,  // Include the updated list_id
+            'description' => $request->description,  // If description is provided
+        ]);
+
+        // Redirect back to the board view
         return redirect()->route('boards.show', $card->list->board);
-    }
-
-    public function updatePosition(Request $request)
-    {
-        $cardId = $request->input('card_id');
-        $listId = $request->input('list_id');
-        $cardOrder = $request->input('cardOrder');
-
-        // Update posisi kartu di database
-        foreach ($cardOrder as $index => $id) {
-            Card::where('id', $id)->update([
-                'list_id' => $listId,
-                'order' => $index
-            ]);
-        }
-
-        return response()->json(['message' => 'Card position updated successfully']);
     }
 
     public function move(Request $request, Card $card)
-    {
-        $request->validate(['list_id' => 'required|exists:lists,id']);
+    {   
+        // Validate that the list_id exists in the list_cards table
+        $request->validate(['list_id' => 'required|exists:list_cards,id']);
+
+        // Update the list_id for the card (moving it to a new list)
         $card->update(['list_id' => $request->list_id]);
+
+        // Redirect back to the board view
         return redirect()->route('boards.show', $card->list->board);
     }
 }
-
